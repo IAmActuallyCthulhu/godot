@@ -37,47 +37,47 @@
 #include "editor_settings.h"
 #include "modules/svg/image_loader_svg.h"
 
-static Ref<StyleBoxTexture> make_stylebox(Ref<Texture> p_texture, float p_left, float p_top, float p_right, float p_botton, float p_margin_left = -1, float p_margin_top = -1, float p_margin_right = -1, float p_margin_botton = -1, bool p_draw_center = true) {
+static Ref<StyleBoxTexture> make_stylebox(Ref<Texture> p_texture, float p_left, float p_top, float p_right, float p_botton, float p_margin_left = -1, float p_margin_top = -1, float p_margin_right = -1, float p_margin_botton = -1, bool p_draw_center = true, float p_scale = 1.0f) {
 	Ref<StyleBoxTexture> style(memnew(StyleBoxTexture));
 	style->set_texture(p_texture);
-	style->set_margin_size(MARGIN_LEFT, p_left * EDSCALE);
-	style->set_margin_size(MARGIN_RIGHT, p_right * EDSCALE);
-	style->set_margin_size(MARGIN_BOTTOM, p_botton * EDSCALE);
-	style->set_margin_size(MARGIN_TOP, p_top * EDSCALE);
-	style->set_default_margin(MARGIN_LEFT, p_margin_left * EDSCALE);
-	style->set_default_margin(MARGIN_RIGHT, p_margin_right * EDSCALE);
-	style->set_default_margin(MARGIN_BOTTOM, p_margin_botton * EDSCALE);
-	style->set_default_margin(MARGIN_TOP, p_margin_top * EDSCALE);
+	style->set_margin_size(MARGIN_LEFT, p_left * EDSCALE * p_scale);
+	style->set_margin_size(MARGIN_RIGHT, p_right * EDSCALE * p_scale);
+	style->set_margin_size(MARGIN_BOTTOM, p_botton * EDSCALE * p_scale);
+	style->set_margin_size(MARGIN_TOP, p_top * EDSCALE * p_scale);
+	style->set_default_margin(MARGIN_LEFT, p_margin_left * EDSCALE * p_scale);
+	style->set_default_margin(MARGIN_RIGHT, p_margin_right * EDSCALE * p_scale);
+	style->set_default_margin(MARGIN_BOTTOM, p_margin_botton * EDSCALE * p_scale);
+	style->set_default_margin(MARGIN_TOP, p_margin_top * EDSCALE * p_scale);
 	style->set_draw_center(p_draw_center);
 	return style;
 }
 
-static Ref<StyleBoxEmpty> make_empty_stylebox(float p_margin_left = -1, float p_margin_top = -1, float p_margin_right = -1, float p_margin_bottom = -1) {
+static Ref<StyleBoxEmpty> make_empty_stylebox(float p_margin_left = -1, float p_margin_top = -1, float p_margin_right = -1, float p_margin_bottom = -1, float p_scale = 1.0f) {
 	Ref<StyleBoxEmpty> style(memnew(StyleBoxEmpty));
-	style->set_default_margin(MARGIN_LEFT, p_margin_left * EDSCALE);
-	style->set_default_margin(MARGIN_RIGHT, p_margin_right * EDSCALE);
-	style->set_default_margin(MARGIN_BOTTOM, p_margin_bottom * EDSCALE);
-	style->set_default_margin(MARGIN_TOP, p_margin_top * EDSCALE);
+	style->set_default_margin(MARGIN_LEFT, p_margin_left * EDSCALE * p_scale);
+	style->set_default_margin(MARGIN_RIGHT, p_margin_right * EDSCALE * p_scale);
+	style->set_default_margin(MARGIN_BOTTOM, p_margin_bottom * EDSCALE * p_scale);
+	style->set_default_margin(MARGIN_TOP, p_margin_top * EDSCALE * p_scale);
 	return style;
 }
 
-static Ref<StyleBoxFlat> make_flat_stylebox(Color p_color, float p_margin_left = -1, float p_margin_top = -1, float p_margin_right = -1, float p_margin_bottom = -1) {
+static Ref<StyleBoxFlat> make_flat_stylebox(Color p_color, float p_margin_left = -1, float p_margin_top = -1, float p_margin_right = -1, float p_margin_bottom = -1, float p_scale = 1.0f) {
 	Ref<StyleBoxFlat> style(memnew(StyleBoxFlat));
 	style->set_bg_color(p_color);
-	style->set_default_margin(MARGIN_LEFT, p_margin_left * EDSCALE);
-	style->set_default_margin(MARGIN_RIGHT, p_margin_right * EDSCALE);
-	style->set_default_margin(MARGIN_BOTTOM, p_margin_bottom * EDSCALE);
-	style->set_default_margin(MARGIN_TOP, p_margin_top * EDSCALE);
+	style->set_default_margin(MARGIN_LEFT, p_margin_left * EDSCALE * p_scale);
+	style->set_default_margin(MARGIN_RIGHT, p_margin_right * EDSCALE * p_scale);
+	style->set_default_margin(MARGIN_BOTTOM, p_margin_bottom * EDSCALE * p_scale);
+	style->set_default_margin(MARGIN_TOP, p_margin_top * EDSCALE * p_scale);
 	return style;
 }
 
-static Ref<StyleBoxLine> make_line_stylebox(Color p_color, int p_thickness = 1, float p_grow_begin = 1, float p_grow_end = 1, bool p_vertical = false) {
+static Ref<StyleBoxLine> make_line_stylebox(Color p_color, int p_thickness = 1, float p_grow_begin = 1, float p_grow_end = 1, bool p_vertical = false, float p_scale = 1.0f) {
 	Ref<StyleBoxLine> style(memnew(StyleBoxLine));
 	style->set_color(p_color);
-	style->set_grow_begin(p_grow_begin);
-	style->set_grow_end(p_grow_end);
-	style->set_thickness(p_thickness);
-	style->set_vertical(p_vertical);
+	style->set_grow_begin(p_grow_begin * p_scale);
+	style->set_grow_end(p_grow_end * p_scale);
+	style->set_thickness(p_thickness * p_scale);
+	style->set_vertical(p_vertical * p_scale);
 	return style;
 }
 
@@ -103,7 +103,7 @@ Ref<ImageTexture> editor_generate_icon(int p_index, bool p_convert_color, float 
 #define ADD_CONVERT_COLOR(dictionary, old_color, new_color) dictionary[Color::html(old_color)] = Color::html(new_color)
 #endif
 
-void editor_register_and_generate_icons(Ref<Theme> p_theme, bool p_dark_theme = true, int p_thumb_size = 32, bool p_only_thumbs = false) {
+void editor_register_and_generate_icons(Ref<Theme> p_theme, bool p_dark_theme = true, int p_thumb_size = 32, bool p_only_thumbs = false, float p_scale = 1.0f) {
 
 #ifdef SVG_ENABLED
 	Dictionary dark_icon_color_dictionary;
@@ -199,14 +199,14 @@ void editor_register_and_generate_icons(Ref<Theme> p_theme, bool p_dark_theme = 
 		for (int i = 0; i < editor_icons_count; i++) {
 			List<String>::Element *is_exception = exceptions.find(editor_icons_names[i]);
 			if (is_exception) exceptions.erase(is_exception);
-			Ref<ImageTexture> icon = editor_generate_icon(i, !is_exception);
+			Ref<ImageTexture> icon = editor_generate_icon(i, !is_exception, p_scale);
 			p_theme->set_icon(editor_icons_names[i], "EditorIcons", icon);
 		}
 
 	// generate thumb files with the given thumb size
-	bool force_filter = p_thumb_size != 64 && p_thumb_size != 32; // we don't need filter with original resolution
+	bool force_filter = true;
 	if (p_thumb_size >= 64) {
-		float scale = (float)p_thumb_size / 64.0 * EDSCALE;
+		float scale = (float)p_thumb_size / 64.0 * p_scale;
 		for (int i = 0; i < editor_bg_thumbs_count; i++) {
 			int index = editor_bg_thumbs_indices[i];
 			List<String>::Element *is_exception = exceptions.find(editor_icons_names[index]);
@@ -215,7 +215,7 @@ void editor_register_and_generate_icons(Ref<Theme> p_theme, bool p_dark_theme = 
 			p_theme->set_icon(editor_icons_names[index], "EditorIcons", icon);
 		}
 	} else {
-		float scale = (float)p_thumb_size / 32.0 * EDSCALE;
+		float scale = (float)p_thumb_size / 32.0 * p_scale;
 		for (int i = 0; i < editor_md_thumbs_count; i++) {
 			int index = editor_md_thumbs_indices[i];
 			List<String>::Element *is_exception = exceptions.find(editor_icons_names[index]);
@@ -231,7 +231,7 @@ void editor_register_and_generate_icons(Ref<Theme> p_theme, bool p_dark_theme = 
 #endif
 }
 
-Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
+Ref<Theme> create_editor_theme(const Ref<Theme> p_theme, const float p_scale) {
 
 	Ref<Theme> theme = Ref<Theme>(memnew(Theme));
 
@@ -370,38 +370,38 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_color("property_color", "Editor", property_color);
 
 	const int thumb_size = EDITOR_GET("filesystem/file_dialog/thumbnail_size");
-	theme->set_constant("scale", "Editor", EDSCALE);
+	theme->set_constant("scale", "Editor", EDSCALE * p_scale);
 	theme->set_constant("thumb_size", "Editor", thumb_size);
 	theme->set_constant("dark_theme", "Editor", dark_theme);
 
 	//Register icons + font
 
 	// the resolution and the icon color (dark_theme bool) has not changed, so we do not regenerate the icons
-	if (p_theme != NULL && fabs(p_theme->get_constant("scale", "Editor") - EDSCALE) < 0.00001 && (bool)p_theme->get_constant("dark_theme", "Editor") == dark_theme) {
+	if (p_theme != NULL && fabs(p_theme->get_constant("scale", "Editor") - EDSCALE * p_scale) < 0.00001 && (bool)p_theme->get_constant("dark_theme", "Editor") == dark_theme) {
 		// register already generated icons
 		for (int i = 0; i < editor_icons_count; i++) {
 			theme->set_icon(editor_icons_names[i], "EditorIcons", p_theme->get_icon(editor_icons_names[i], "EditorIcons"));
 		}
 	} else {
-		editor_register_and_generate_icons(theme, dark_theme, thumb_size);
+		editor_register_and_generate_icons(theme, dark_theme, thumb_size, false, p_scale);
 	}
 	// thumbnail size has changed, so we regenerate the medium sizes
 	if (p_theme != NULL && fabs((double)p_theme->get_constant("thumb_size", "Editor") - thumb_size) > 0.00001) {
-		editor_register_and_generate_icons(p_theme, dark_theme, thumb_size, true);
+		editor_register_and_generate_icons(p_theme, dark_theme, thumb_size, true, p_scale);
 	}
 
-	editor_register_fonts(theme);
+	editor_register_fonts(theme, p_scale);
 
 	// Highlighted tabs and border width
 	Color tab_color = highlight_tabs ? base_color.linear_interpolate(font_color, contrast) : base_color;
-	const int border_width = CLAMP(border_size, 0, 3) * EDSCALE;
+	const int border_width = CLAMP(border_size, 0, 3) * EDSCALE * p_scale;
 
-	const int default_margin_size = 4;
+	const int default_margin_size = 4 * p_scale;
 	const int margin_size_extra = default_margin_size + CLAMP(border_size, 0, 3);
 
 	// styleboxes
 	// this is the most commonly used stylebox, variations should be made as duplicate of this
-	Ref<StyleBoxFlat> style_default = make_flat_stylebox(base_color, default_margin_size, default_margin_size, default_margin_size, default_margin_size);
+	Ref<StyleBoxFlat> style_default = make_flat_stylebox(base_color, default_margin_size, default_margin_size, default_margin_size, default_margin_size, p_scale);
 	style_default->set_border_width_all(border_width);
 	style_default->set_border_color(base_color);
 	style_default->set_draw_center(true);
@@ -410,10 +410,10 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	const float extra_spacing = EDITOR_GET("interface/theme/additional_spacing");
 
 	Ref<StyleBoxFlat> style_widget = style_default->duplicate();
-	style_widget->set_default_margin(MARGIN_LEFT, (extra_spacing + 6) * EDSCALE);
-	style_widget->set_default_margin(MARGIN_TOP, (extra_spacing + default_margin_size) * EDSCALE);
-	style_widget->set_default_margin(MARGIN_RIGHT, (extra_spacing + 6) * EDSCALE);
-	style_widget->set_default_margin(MARGIN_BOTTOM, (extra_spacing + default_margin_size) * EDSCALE);
+	style_widget->set_default_margin(MARGIN_LEFT, (extra_spacing + 6) * EDSCALE * p_scale);
+	style_widget->set_default_margin(MARGIN_TOP, (extra_spacing + default_margin_size) * EDSCALE * p_scale);
+	style_widget->set_default_margin(MARGIN_RIGHT, (extra_spacing + 6) * EDSCALE * p_scale);
+	style_widget->set_default_margin(MARGIN_BOTTOM, (extra_spacing + default_margin_size) * EDSCALE * p_scale);
 	style_widget->set_bg_color(dark_color_1);
 	style_widget->set_border_color(dark_color_2);
 
@@ -432,39 +432,39 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 
 	// style for windows, popups, etc..
 	Ref<StyleBoxFlat> style_popup = style_default->duplicate();
-	const int popup_margin_size = default_margin_size * EDSCALE * 2;
+	const int popup_margin_size = default_margin_size * EDSCALE * p_scale * 2;
 	style_popup->set_default_margin(MARGIN_LEFT, popup_margin_size);
 	style_popup->set_default_margin(MARGIN_TOP, popup_margin_size);
 	style_popup->set_default_margin(MARGIN_RIGHT, popup_margin_size);
 	style_popup->set_default_margin(MARGIN_BOTTOM, popup_margin_size);
 	style_popup->set_border_color(contrast_color_1);
-	style_popup->set_border_width_all(MAX(EDSCALE, border_width));
+	style_popup->set_border_width_all(MAX(EDSCALE * p_scale, border_width));
 	const Color shadow_color = Color(0, 0, 0, dark_theme ? 0.3 : 0.1);
 	style_popup->set_shadow_color(shadow_color);
-	style_popup->set_shadow_size(4 * EDSCALE);
+	style_popup->set_shadow_size(4 * EDSCALE * p_scale);
 
 	Ref<StyleBoxLine> style_popup_separator(memnew(StyleBoxLine));
 	style_popup_separator->set_color(separator_color);
-	style_popup_separator->set_grow_begin(popup_margin_size - MAX(EDSCALE, border_width));
-	style_popup_separator->set_grow_end(popup_margin_size - MAX(EDSCALE, border_width));
-	style_popup_separator->set_thickness(MAX(EDSCALE, border_width));
+	style_popup_separator->set_grow_begin(popup_margin_size - MAX(EDSCALE * p_scale, border_width));
+	style_popup_separator->set_grow_end(popup_margin_size - MAX(EDSCALE * p_scale, border_width));
+	style_popup_separator->set_thickness(MAX(EDSCALE * p_scale, border_width));
 
 	Ref<StyleBoxLine> style_popup_labeled_separator_left(memnew(StyleBoxLine));
-	style_popup_labeled_separator_left->set_grow_begin(popup_margin_size - MAX(EDSCALE, border_width));
+	style_popup_labeled_separator_left->set_grow_begin(popup_margin_size - MAX(EDSCALE * p_scale, border_width));
 	style_popup_labeled_separator_left->set_color(separator_color);
-	style_popup_labeled_separator_left->set_thickness(MAX(EDSCALE, border_width));
+	style_popup_labeled_separator_left->set_thickness(MAX(EDSCALE * p_scale, border_width));
 
 	Ref<StyleBoxLine> style_popup_labeled_separator_right(memnew(StyleBoxLine));
-	style_popup_labeled_separator_right->set_grow_end(popup_margin_size - MAX(EDSCALE, border_width));
+	style_popup_labeled_separator_right->set_grow_end(popup_margin_size - MAX(EDSCALE * p_scale, border_width));
 	style_popup_labeled_separator_right->set_color(separator_color);
-	style_popup_labeled_separator_right->set_thickness(MAX(EDSCALE, border_width));
+	style_popup_labeled_separator_right->set_thickness(MAX(EDSCALE * p_scale, border_width));
 
-	Ref<StyleBoxEmpty> style_empty = make_empty_stylebox(default_margin_size, default_margin_size, default_margin_size, default_margin_size);
+	Ref<StyleBoxEmpty> style_empty = make_empty_stylebox(default_margin_size, default_margin_size, default_margin_size, default_margin_size, p_scale);
 
 	// Tabs
 
-	const int tab_default_margin_side = 10 * EDSCALE + extra_spacing * EDSCALE;
-	const int tab_default_margin_vertical = 5 * EDSCALE + extra_spacing * EDSCALE;
+	const int tab_default_margin_side = 10 * EDSCALE * p_scale + extra_spacing * EDSCALE * p_scale;
+	const int tab_default_margin_vertical = 5 * EDSCALE * p_scale + extra_spacing * EDSCALE * p_scale;
 
 	Ref<StyleBoxFlat> style_tab_selected = style_widget->duplicate();
 
@@ -487,7 +487,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	style_tab_disabled->set_border_color(color_disabled);
 
 	// Editor background
-	theme->set_stylebox("Background", "EditorStyles", make_flat_stylebox(background_color, default_margin_size, default_margin_size, default_margin_size, default_margin_size));
+	theme->set_stylebox("Background", "EditorStyles", make_flat_stylebox(background_color, default_margin_size, default_margin_size, default_margin_size, default_margin_size, p_scale));
 
 	// Focus
 	Ref<StyleBoxFlat> style_focus = style_default->duplicate();
@@ -503,8 +503,8 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_stylebox("MenuPanel", "EditorStyles", style_menu);
 
 	// Script Editor
-	theme->set_stylebox("ScriptEditorPanel", "EditorStyles", make_empty_stylebox(default_margin_size, 0, default_margin_size, default_margin_size));
-	theme->set_stylebox("ScriptEditor", "EditorStyles", make_empty_stylebox(0, 0, 0, 0));
+	theme->set_stylebox("ScriptEditorPanel", "EditorStyles", make_empty_stylebox(default_margin_size, 0, default_margin_size, default_margin_size, p_scale));
+	theme->set_stylebox("ScriptEditor", "EditorStyles", make_empty_stylebox(0, 0, 0, 0, p_scale));
 
 	// Play button group
 	theme->set_stylebox("PlayButtonPanel", "EditorStyles", style_empty);
@@ -574,9 +574,9 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_color("font_color_disabled", "OptionButton", font_color_disabled);
 	theme->set_color("icon_color_hover", "OptionButton", font_color_hl);
 	theme->set_icon("arrow", "OptionButton", theme->get_icon("GuiOptionArrow", "EditorIcons"));
-	theme->set_constant("arrow_margin", "OptionButton", default_margin_size * EDSCALE);
+	theme->set_constant("arrow_margin", "OptionButton", default_margin_size * EDSCALE * p_scale);
 	theme->set_constant("modulate_arrow", "OptionButton", true);
-	theme->set_constant("hseparation", "OptionButton", 4 * EDSCALE);
+	theme->set_constant("hseparation", "OptionButton", 4 * EDSCALE * p_scale);
 
 	// CheckButton
 	theme->set_stylebox("normal", "CheckButton", style_menu);
@@ -595,15 +595,15 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_color("font_color_disabled", "CheckButton", font_color_disabled);
 	theme->set_color("icon_color_hover", "CheckButton", font_color_hl);
 
-	theme->set_constant("hseparation", "CheckButton", 4 * EDSCALE);
-	theme->set_constant("check_vadjust", "CheckButton", 0 * EDSCALE);
+	theme->set_constant("hseparation", "CheckButton", 4 * EDSCALE * p_scale);
+	theme->set_constant("check_vadjust", "CheckButton", 0 * EDSCALE * p_scale);
 
 	// Checkbox
 	Ref<StyleBoxFlat> sb_checkbox = style_menu->duplicate();
-	sb_checkbox->set_default_margin(MARGIN_LEFT, default_margin_size * EDSCALE);
-	sb_checkbox->set_default_margin(MARGIN_RIGHT, default_margin_size * EDSCALE);
-	sb_checkbox->set_default_margin(MARGIN_TOP, default_margin_size * EDSCALE);
-	sb_checkbox->set_default_margin(MARGIN_BOTTOM, default_margin_size * EDSCALE);
+	sb_checkbox->set_default_margin(MARGIN_LEFT, default_margin_size * EDSCALE * p_scale);
+	sb_checkbox->set_default_margin(MARGIN_RIGHT, default_margin_size * EDSCALE * p_scale);
+	sb_checkbox->set_default_margin(MARGIN_TOP, default_margin_size * EDSCALE * p_scale);
+	sb_checkbox->set_default_margin(MARGIN_BOTTOM, default_margin_size * EDSCALE * p_scale);
 
 	theme->set_stylebox("normal", "CheckBox", sb_checkbox);
 	theme->set_stylebox("pressed", "CheckBox", sb_checkbox);
@@ -620,8 +620,8 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_color("font_color_disabled", "CheckBox", font_color_disabled);
 	theme->set_color("icon_color_hover", "CheckBox", font_color_hl);
 
-	theme->set_constant("hseparation", "CheckBox", 4 * EDSCALE);
-	theme->set_constant("check_vadjust", "CheckBox", 0 * EDSCALE);
+	theme->set_constant("hseparation", "CheckBox", 4 * EDSCALE * p_scale);
+	theme->set_constant("check_vadjust", "CheckBox", 0 * EDSCALE * p_scale);
 
 	// PopupMenu
 	Ref<StyleBoxFlat> style_popup_menu = style_popup;
@@ -642,9 +642,9 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_icon("visibility_hidden", "PopupMenu", theme->get_icon("GuiVisibilityHidden", "EditorIcons"));
 	theme->set_icon("visibility_visible", "PopupMenu", theme->get_icon("GuiVisibilityVisible", "EditorIcons"));
 	theme->set_icon("visibility_xray", "PopupMenu", theme->get_icon("GuiVisibilityXray", "EditorIcons"));
-	theme->set_constant("vseparation", "PopupMenu", (extra_spacing + default_margin_size + 1) * EDSCALE);
+	theme->set_constant("vseparation", "PopupMenu", (extra_spacing + default_margin_size + 1) * EDSCALE * p_scale);
 
-	Ref<StyleBoxFlat> sub_inspector_bg = make_flat_stylebox(dark_color_1.linear_interpolate(accent_color, 0.08), 2, 0, 2, 2);
+	Ref<StyleBoxFlat> sub_inspector_bg = make_flat_stylebox(dark_color_1.linear_interpolate(accent_color, 0.08), 2, 0, 2, 2, p_scale);
 	sub_inspector_bg->set_border_width(MARGIN_LEFT, 2);
 	sub_inspector_bg->set_border_width(MARGIN_RIGHT, 2);
 	sub_inspector_bg->set_border_width(MARGIN_BOTTOM, 2);
@@ -652,7 +652,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	sub_inspector_bg->set_draw_center(true);
 
 	theme->set_stylebox("sub_inspector_bg", "Editor", sub_inspector_bg);
-	theme->set_constant("inspector_margin", "Editor", 8 * EDSCALE);
+	theme->set_constant("inspector_margin", "Editor", 8 * EDSCALE * p_scale);
 
 	// Tree & ItemList background
 	Ref<StyleBoxFlat> style_tree_bg = style_default->duplicate();
@@ -682,14 +682,14 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_color("guide_color", "Tree", guide_color);
 	theme->set_color("relationship_line_color", "Tree", relationship_line_color);
 	theme->set_color("drop_position_color", "Tree", accent_color);
-	theme->set_constant("vseparation", "Tree", (extra_spacing + default_margin_size) * EDSCALE);
-	theme->set_constant("hseparation", "Tree", (extra_spacing + default_margin_size) * EDSCALE);
+	theme->set_constant("vseparation", "Tree", (extra_spacing + default_margin_size) * EDSCALE * p_scale);
+	theme->set_constant("hseparation", "Tree", (extra_spacing + default_margin_size) * EDSCALE * p_scale);
 	theme->set_constant("guide_width", "Tree", border_width);
-	theme->set_constant("item_margin", "Tree", 3 * default_margin_size * EDSCALE);
-	theme->set_constant("button_margin", "Tree", default_margin_size * EDSCALE);
+	theme->set_constant("item_margin", "Tree", 3 * default_margin_size * EDSCALE * p_scale);
+	theme->set_constant("button_margin", "Tree", default_margin_size * EDSCALE * p_scale);
 	theme->set_constant("draw_relationship_lines", "Tree", relationship_line_opacity >= 0.01);
 	theme->set_constant("draw_guides", "Tree", relationship_line_opacity < 0.01);
-	theme->set_constant("scroll_border", "Tree", 40 * EDSCALE);
+	theme->set_constant("scroll_border", "Tree", 40 * EDSCALE * p_scale);
 	theme->set_constant("scroll_speed", "Tree", 12);
 
 	Ref<StyleBoxFlat> style_tree_btn = style_default->duplicate();
@@ -746,10 +746,10 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_color("font_color", "ItemList", font_color);
 	theme->set_color("font_color_selected", "ItemList", mono_color);
 	theme->set_color("guide_color", "ItemList", guide_color);
-	theme->set_constant("vseparation", "ItemList", 3 * EDSCALE);
-	theme->set_constant("hseparation", "ItemList", 3 * EDSCALE);
-	theme->set_constant("icon_margin", "ItemList", default_margin_size * EDSCALE);
-	theme->set_constant("line_separation", "ItemList", 3 * EDSCALE);
+	theme->set_constant("vseparation", "ItemList", 3 * EDSCALE * p_scale);
+	theme->set_constant("hseparation", "ItemList", 3 * EDSCALE * p_scale);
+	theme->set_constant("icon_margin", "ItemList", default_margin_size * EDSCALE * p_scale);
+	theme->set_constant("line_separation", "ItemList", 3 * EDSCALE * p_scale);
 
 	// Tabs & TabContainer
 	theme->set_stylebox("tab_fg", "TabContainer", style_tab_selected);
@@ -777,22 +777,22 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_icon("decrement_highlight", "Tabs", theme->get_icon("GuiScrollArrowLeft", "EditorIcons"));
 	theme->set_icon("increment_highlight", "TabContainer", theme->get_icon("GuiScrollArrowRight", "EditorIcons"));
 	theme->set_icon("decrement_highlight", "TabContainer", theme->get_icon("GuiScrollArrowLeft", "EditorIcons"));
-	theme->set_constant("hseparation", "Tabs", 4 * EDSCALE);
+	theme->set_constant("hseparation", "Tabs", 4 * EDSCALE * p_scale);
 
 	// Content of each tab
 	Ref<StyleBoxFlat> style_content_panel = style_default->duplicate();
 	style_content_panel->set_border_color(dark_color_3);
 	style_content_panel->set_border_width_all(border_width);
 	// compensate the border
-	style_content_panel->set_default_margin(MARGIN_TOP, margin_size_extra * EDSCALE);
-	style_content_panel->set_default_margin(MARGIN_RIGHT, margin_size_extra * EDSCALE);
-	style_content_panel->set_default_margin(MARGIN_BOTTOM, margin_size_extra * EDSCALE);
-	style_content_panel->set_default_margin(MARGIN_LEFT, margin_size_extra * EDSCALE);
+	style_content_panel->set_default_margin(MARGIN_TOP, margin_size_extra * EDSCALE * p_scale);
+	style_content_panel->set_default_margin(MARGIN_RIGHT, margin_size_extra * EDSCALE * p_scale);
+	style_content_panel->set_default_margin(MARGIN_BOTTOM, margin_size_extra * EDSCALE * p_scale);
+	style_content_panel->set_default_margin(MARGIN_LEFT, margin_size_extra * EDSCALE * p_scale);
 
 	// this is the stylebox used in 3d and 2d viewports (no borders)
 	Ref<StyleBoxFlat> style_content_panel_vp = style_content_panel->duplicate();
 	style_content_panel_vp->set_default_margin(MARGIN_LEFT, border_width * 2);
-	style_content_panel_vp->set_default_margin(MARGIN_TOP, default_margin_size * EDSCALE);
+	style_content_panel_vp->set_default_margin(MARGIN_TOP, default_margin_size * EDSCALE * p_scale);
 	style_content_panel_vp->set_default_margin(MARGIN_RIGHT, border_width * 2);
 	style_content_panel_vp->set_default_margin(MARGIN_BOTTOM, border_width * 2);
 	theme->set_stylebox("panel", "TabContainer", style_content_panel);
@@ -841,38 +841,38 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_color("selection_color", "TextEdit", font_color_selection);
 
 	// H/VSplitContainer
-	theme->set_stylebox("bg", "VSplitContainer", make_stylebox(theme->get_icon("GuiVsplitBg", "EditorIcons"), 1, 1, 1, 1));
-	theme->set_stylebox("bg", "HSplitContainer", make_stylebox(theme->get_icon("GuiHsplitBg", "EditorIcons"), 1, 1, 1, 1));
+	theme->set_stylebox("bg", "VSplitContainer", make_stylebox(theme->get_icon("GuiVsplitBg", "EditorIcons"), 1, 1, 1, 1, -1, -1, -1, -1, true, p_scale));
+	theme->set_stylebox("bg", "HSplitContainer", make_stylebox(theme->get_icon("GuiHsplitBg", "EditorIcons"), 1, 1, 1, 1, -1, -1, -1, -1, true, p_scale));
 
 	theme->set_icon("grabber", "VSplitContainer", theme->get_icon("GuiVsplitter", "EditorIcons"));
 	theme->set_icon("grabber", "HSplitContainer", theme->get_icon("GuiHsplitter", "EditorIcons"));
 
-	theme->set_constant("separation", "HSplitContainer", default_margin_size * 2 * EDSCALE);
-	theme->set_constant("separation", "VSplitContainer", default_margin_size * 2 * EDSCALE);
+	theme->set_constant("separation", "HSplitContainer", default_margin_size * 2 * EDSCALE * p_scale);
+	theme->set_constant("separation", "VSplitContainer", default_margin_size * 2 * EDSCALE * p_scale);
 
 	// Containers
-	theme->set_constant("separation", "BoxContainer", default_margin_size * EDSCALE);
-	theme->set_constant("separation", "HBoxContainer", default_margin_size * EDSCALE);
-	theme->set_constant("separation", "VBoxContainer", default_margin_size * EDSCALE);
+	theme->set_constant("separation", "BoxContainer", default_margin_size * EDSCALE * p_scale);
+	theme->set_constant("separation", "HBoxContainer", default_margin_size * EDSCALE * p_scale);
+	theme->set_constant("separation", "VBoxContainer", default_margin_size * EDSCALE * p_scale);
 	theme->set_constant("margin_left", "MarginContainer", 0);
 	theme->set_constant("margin_top", "MarginContainer", 0);
 	theme->set_constant("margin_right", "MarginContainer", 0);
 	theme->set_constant("margin_bottom", "MarginContainer", 0);
-	theme->set_constant("hseparation", "GridContainer", default_margin_size * EDSCALE);
-	theme->set_constant("vseparation", "GridContainer", default_margin_size * EDSCALE);
+	theme->set_constant("hseparation", "GridContainer", default_margin_size * EDSCALE * p_scale);
+	theme->set_constant("vseparation", "GridContainer", default_margin_size * EDSCALE * p_scale);
 
 	// WindowDialog
 	Ref<StyleBoxFlat> style_window = style_popup->duplicate();
 	style_window->set_border_color(tab_color);
-	style_window->set_border_width(MARGIN_TOP, 24 * EDSCALE);
-	style_window->set_expand_margin_size(MARGIN_TOP, 24 * EDSCALE);
+	style_window->set_border_width(MARGIN_TOP, 24 * EDSCALE * p_scale);
+	style_window->set_expand_margin_size(MARGIN_TOP, 24 * EDSCALE * p_scale);
 	theme->set_stylebox("panel", "WindowDialog", style_window);
 	theme->set_color("title_color", "WindowDialog", font_color);
 	theme->set_icon("close", "WindowDialog", theme->get_icon("GuiClose", "EditorIcons"));
 	theme->set_icon("close_highlight", "WindowDialog", theme->get_icon("GuiClose", "EditorIcons"));
-	theme->set_constant("close_h_ofs", "WindowDialog", 22 * EDSCALE);
-	theme->set_constant("close_v_ofs", "WindowDialog", 20 * EDSCALE);
-	theme->set_constant("title_height", "WindowDialog", 24 * EDSCALE);
+	theme->set_constant("close_h_ofs", "WindowDialog", 22 * EDSCALE * p_scale);
+	theme->set_constant("close_v_ofs", "WindowDialog", 20 * EDSCALE * p_scale);
+	theme->set_constant("title_height", "WindowDialog", 24 * EDSCALE * p_scale);
 	theme->set_font("title_font", "WindowDialog", theme->get_font("title", "EditorFonts"));
 
 	// complex window, for now only Editor settings and Project settings
@@ -886,11 +886,11 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	// HScrollBar
 	Ref<Texture> empty_icon = memnew(ImageTexture);
 
-	theme->set_stylebox("scroll", "HScrollBar", make_stylebox(theme->get_icon("GuiScrollBg", "EditorIcons"), 5, 5, 5, 5, 0, 0, 0, 0));
-	theme->set_stylebox("scroll_focus", "HScrollBar", make_stylebox(theme->get_icon("GuiScrollBg", "EditorIcons"), 5, 5, 5, 5, 0, 0, 0, 0));
-	theme->set_stylebox("grabber", "HScrollBar", make_stylebox(theme->get_icon("GuiScrollGrabber", "EditorIcons"), 6, 6, 6, 6, 2, 2, 2, 2));
-	theme->set_stylebox("grabber_highlight", "HScrollBar", make_stylebox(theme->get_icon("GuiScrollGrabberHl", "EditorIcons"), 5, 5, 5, 5, 2, 2, 2, 2));
-	theme->set_stylebox("grabber_pressed", "HScrollBar", make_stylebox(theme->get_icon("GuiScrollGrabberPressed", "EditorIcons"), 6, 6, 6, 6, 2, 2, 2, 2));
+	theme->set_stylebox("scroll", "HScrollBar", make_stylebox(theme->get_icon("GuiScrollBg", "EditorIcons"), 5, 5, 5, 5, 0, 0, 0, 0, true, p_scale));
+	theme->set_stylebox("scroll_focus", "HScrollBar", make_stylebox(theme->get_icon("GuiScrollBg", "EditorIcons"), 5, 5, 5, 5, 0, 0, 0, 0, true, p_scale));
+	theme->set_stylebox("grabber", "HScrollBar", make_stylebox(theme->get_icon("GuiScrollGrabber", "EditorIcons"), 6, 6, 6, 6, 2, 2, 2, 2, true, p_scale));
+	theme->set_stylebox("grabber_highlight", "HScrollBar", make_stylebox(theme->get_icon("GuiScrollGrabberHl", "EditorIcons"), 5, 5, 5, 5, 2, 2, 2, 2, true, p_scale));
+	theme->set_stylebox("grabber_pressed", "HScrollBar", make_stylebox(theme->get_icon("GuiScrollGrabberPressed", "EditorIcons"), 6, 6, 6, 6, 2, 2, 2, 2, true, p_scale));
 
 	theme->set_icon("increment", "HScrollBar", empty_icon);
 	theme->set_icon("increment_highlight", "HScrollBar", empty_icon);
@@ -898,11 +898,11 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_icon("decrement_highlight", "HScrollBar", empty_icon);
 
 	// VScrollBar
-	theme->set_stylebox("scroll", "VScrollBar", make_stylebox(theme->get_icon("GuiScrollBg", "EditorIcons"), 5, 5, 5, 5, 0, 0, 0, 0));
-	theme->set_stylebox("scroll_focus", "VScrollBar", make_stylebox(theme->get_icon("GuiScrollBg", "EditorIcons"), 5, 5, 5, 5, 0, 0, 0, 0));
-	theme->set_stylebox("grabber", "VScrollBar", make_stylebox(theme->get_icon("GuiScrollGrabber", "EditorIcons"), 6, 6, 6, 6, 2, 2, 2, 2));
-	theme->set_stylebox("grabber_highlight", "VScrollBar", make_stylebox(theme->get_icon("GuiScrollGrabberHl", "EditorIcons"), 5, 5, 5, 5, 2, 2, 2, 2));
-	theme->set_stylebox("grabber_pressed", "VScrollBar", make_stylebox(theme->get_icon("GuiScrollGrabberPressed", "EditorIcons"), 6, 6, 6, 6, 2, 2, 2, 2));
+	theme->set_stylebox("scroll", "VScrollBar", make_stylebox(theme->get_icon("GuiScrollBg", "EditorIcons"), 5, 5, 5, 5, 0, 0, 0, 0, true, p_scale));
+	theme->set_stylebox("scroll_focus", "VScrollBar", make_stylebox(theme->get_icon("GuiScrollBg", "EditorIcons"), 5, 5, 5, 5, 0, 0, 0, 0, true, p_scale));
+	theme->set_stylebox("grabber", "VScrollBar", make_stylebox(theme->get_icon("GuiScrollGrabber", "EditorIcons"), 6, 6, 6, 6, 2, 2, 2, 2, true, p_scale));
+	theme->set_stylebox("grabber_highlight", "VScrollBar", make_stylebox(theme->get_icon("GuiScrollGrabberHl", "EditorIcons"), 5, 5, 5, 5, 2, 2, 2, 2, true, p_scale));
+	theme->set_stylebox("grabber_pressed", "VScrollBar", make_stylebox(theme->get_icon("GuiScrollGrabberPressed", "EditorIcons"), 6, 6, 6, 6, 2, 2, 2, 2, true, p_scale));
 
 	theme->set_icon("increment", "VScrollBar", empty_icon);
 	theme->set_icon("increment_highlight", "VScrollBar", empty_icon);
@@ -912,37 +912,37 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	// HSlider
 	theme->set_icon("grabber_highlight", "HSlider", theme->get_icon("GuiSliderGrabberHl", "EditorIcons"));
 	theme->set_icon("grabber", "HSlider", theme->get_icon("GuiSliderGrabber", "EditorIcons"));
-	theme->set_stylebox("slider", "HSlider", make_flat_stylebox(dark_color_3, 0, default_margin_size / 2, 0, default_margin_size / 2));
-	theme->set_stylebox("grabber_area", "HSlider", make_flat_stylebox(contrast_color_1, 0, default_margin_size / 2, 0, default_margin_size / 2));
+	theme->set_stylebox("slider", "HSlider", make_flat_stylebox(dark_color_3, 0, default_margin_size / 2, 0, default_margin_size / 2, p_scale));
+	theme->set_stylebox("grabber_area", "HSlider", make_flat_stylebox(contrast_color_1, 0, default_margin_size / 2, 0, default_margin_size / 2, p_scale));
 
 	// VSlider
 	theme->set_icon("grabber", "VSlider", theme->get_icon("GuiSliderGrabber", "EditorIcons"));
 	theme->set_icon("grabber_highlight", "VSlider", theme->get_icon("GuiSliderGrabberHl", "EditorIcons"));
-	theme->set_stylebox("slider", "VSlider", make_flat_stylebox(dark_color_3, default_margin_size / 2, 0, default_margin_size / 2, 0));
-	theme->set_stylebox("grabber_area", "VSlider", make_flat_stylebox(contrast_color_1, default_margin_size / 2, 0, default_margin_size / 2, 0));
+	theme->set_stylebox("slider", "VSlider", make_flat_stylebox(dark_color_3, default_margin_size / 2, 0, default_margin_size / 2, 0, p_scale));
+	theme->set_stylebox("grabber_area", "VSlider", make_flat_stylebox(contrast_color_1, default_margin_size / 2, 0, default_margin_size / 2, 0, p_scale));
 
 	//RichTextLabel
 	theme->set_color("default_color", "RichTextLabel", font_color);
 	theme->set_color("font_color_shadow", "RichTextLabel", Color(0, 0, 0, 0));
-	theme->set_constant("shadow_offset_x", "RichTextLabel", 1 * EDSCALE);
-	theme->set_constant("shadow_offset_y", "RichTextLabel", 1 * EDSCALE);
-	theme->set_constant("shadow_as_outline", "RichTextLabel", 0 * EDSCALE);
+	theme->set_constant("shadow_offset_x", "RichTextLabel", 1 * EDSCALE * p_scale);
+	theme->set_constant("shadow_offset_y", "RichTextLabel", 1 * EDSCALE * p_scale);
+	theme->set_constant("shadow_as_outline", "RichTextLabel", 0 * EDSCALE * p_scale);
 	theme->set_stylebox("focus", "RichTextLabel", make_empty_stylebox());
 	theme->set_stylebox("normal", "RichTextLabel", style_tree_bg);
 
 	theme->set_color("headline_color", "EditorHelp", mono_color);
 
 	// Panel
-	theme->set_stylebox("panel", "Panel", make_flat_stylebox(dark_color_1, 6, 4, 6, 4));
+	theme->set_stylebox("panel", "Panel", make_flat_stylebox(dark_color_1, 6, 4, 6, 4, p_scale));
 
 	// Label
 	theme->set_stylebox("normal", "Label", style_empty);
 	theme->set_color("font_color", "Label", font_color);
 	theme->set_color("font_color_shadow", "Label", Color(0, 0, 0, 0));
-	theme->set_constant("shadow_offset_x", "Label", 1 * EDSCALE);
-	theme->set_constant("shadow_offset_y", "Label", 1 * EDSCALE);
-	theme->set_constant("shadow_as_outline", "Label", 0 * EDSCALE);
-	theme->set_constant("line_spacing", "Label", 3 * EDSCALE);
+	theme->set_constant("shadow_offset_x", "Label", 1 * EDSCALE * p_scale);
+	theme->set_constant("shadow_offset_y", "Label", 1 * EDSCALE * p_scale);
+	theme->set_constant("shadow_as_outline", "Label", 0 * EDSCALE * p_scale);
+	theme->set_constant("line_spacing", "Label", 3 * EDSCALE * p_scale);
 
 	// LinkButton
 	theme->set_stylebox("focus", "LinkButton", style_empty);
@@ -950,7 +950,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 
 	// TooltipPanel
 	Ref<StyleBoxFlat> style_tooltip = style_popup->duplicate();
-	float v = MAX(border_size * EDSCALE, 1.0);
+	float v = MAX(border_size * EDSCALE * p_scale, 1.0);
 	style_tooltip->set_default_margin(MARGIN_LEFT, v);
 	style_tooltip->set_default_margin(MARGIN_TOP, v);
 	style_tooltip->set_default_margin(MARGIN_RIGHT, v);
@@ -969,8 +969,8 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_icon("updown", "SpinBox", theme->get_icon("GuiSpinboxUpdown", "EditorIcons"));
 
 	// ProgressBar
-	theme->set_stylebox("bg", "ProgressBar", make_stylebox(theme->get_icon("GuiProgressBar", "EditorIcons"), 4, 4, 4, 4, 0, 0, 0, 0));
-	theme->set_stylebox("fg", "ProgressBar", make_stylebox(theme->get_icon("GuiProgressFill", "EditorIcons"), 6, 6, 6, 6, 2, 1, 2, 1));
+	theme->set_stylebox("bg", "ProgressBar", make_stylebox(theme->get_icon("GuiProgressBar", "EditorIcons"), 4, 4, 4, 4, 0, 0, 0, 0, true, p_scale));
+	theme->set_stylebox("fg", "ProgressBar", make_stylebox(theme->get_icon("GuiProgressFill", "EditorIcons"), 6, 6, 6, 6, 2, 1, 2, 1, true, p_scale));
 	theme->set_color("font_color", "ProgressBar", font_color);
 
 	// GraphEdit
@@ -982,26 +982,26 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	theme->set_icon("more", "GraphEdit", theme->get_icon("ZoomMore", "EditorIcons"));
 	theme->set_icon("reset", "GraphEdit", theme->get_icon("ZoomReset", "EditorIcons"));
 	theme->set_icon("snap", "GraphEdit", theme->get_icon("SnapGrid", "EditorIcons"));
-	theme->set_constant("bezier_len_pos", "GraphEdit", 80 * EDSCALE);
-	theme->set_constant("bezier_len_neg", "GraphEdit", 160 * EDSCALE);
+	theme->set_constant("bezier_len_pos", "GraphEdit", 80 * EDSCALE * p_scale);
+	theme->set_constant("bezier_len_neg", "GraphEdit", 160 * EDSCALE * p_scale);
 
 	// GraphNode
 
 	const float mv = dark_theme ? 0.0 : 1.0;
 	const float mv2 = 1.0 - mv;
-	const int gn_margin_side = 28;
-	Ref<StyleBoxFlat> graphsb = make_flat_stylebox(Color(mv, mv, mv, 0.7), gn_margin_side, 24, gn_margin_side, 5);
+	const int gn_margin_side = 28 * p_scale;
+	Ref<StyleBoxFlat> graphsb = make_flat_stylebox(Color(mv, mv, mv, 0.7), gn_margin_side, 24, gn_margin_side, 5, p_scale);
 	graphsb->set_border_width_all(border_width);
 	graphsb->set_border_color(Color(mv2, mv2, mv2, 0.9));
-	Ref<StyleBoxFlat> graphsbselected = make_flat_stylebox(Color(mv, mv, mv, 0.9), gn_margin_side, 24, gn_margin_side, 5);
+	Ref<StyleBoxFlat> graphsbselected = make_flat_stylebox(Color(mv, mv, mv, 0.9), gn_margin_side, 24, gn_margin_side, 5, p_scale);
 	graphsbselected->set_border_width_all(border_width);
 	graphsbselected->set_border_color(Color(accent_color.r, accent_color.g, accent_color.b, 0.9));
-	graphsbselected->set_shadow_size(8 * EDSCALE);
+	graphsbselected->set_shadow_size(8 * EDSCALE * p_scale);
 	graphsbselected->set_shadow_color(shadow_color);
-	Ref<StyleBoxFlat> graphsbcomment = make_flat_stylebox(Color(mv, mv, mv, 0.3), gn_margin_side, 24, gn_margin_side, 5);
+	Ref<StyleBoxFlat> graphsbcomment = make_flat_stylebox(Color(mv, mv, mv, 0.3), gn_margin_side, 24, gn_margin_side, 5, p_scale);
 	graphsbcomment->set_border_width_all(border_width);
 	graphsbcomment->set_border_color(Color(mv2, mv2, mv2, 0.9));
-	Ref<StyleBoxFlat> graphsbcommentselected = make_flat_stylebox(Color(mv, mv, mv, 0.4), gn_margin_side, 24, gn_margin_side, 5);
+	Ref<StyleBoxFlat> graphsbcommentselected = make_flat_stylebox(Color(mv, mv, mv, 0.4), gn_margin_side, 24, gn_margin_side, 5, p_scale);
 	graphsbcommentselected->set_border_width_all(border_width);
 	graphsbcommentselected->set_border_color(Color(mv2, mv2, mv2, 0.9));
 	Ref<StyleBoxFlat> graphsbbreakpoint = graphsbselected->duplicate();
@@ -1012,20 +1012,20 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	graphsbposition->set_draw_center(false);
 	graphsbposition->set_border_color(error_color);
 	graphsbposition->set_shadow_color(error_color * Color(1.0, 1.0, 1.0, 0.2));
-	Ref<StyleBoxFlat> smgraphsb = make_flat_stylebox(Color(mv, mv, mv, 0.7), gn_margin_side, 24, gn_margin_side, 5);
+	Ref<StyleBoxFlat> smgraphsb = make_flat_stylebox(Color(mv, mv, mv, 0.7), gn_margin_side, 24, gn_margin_side, 5, p_scale);
 	smgraphsb->set_border_width_all(border_width);
 	smgraphsb->set_border_color(Color(mv2, mv2, mv2, 0.9));
-	Ref<StyleBoxFlat> smgraphsbselected = make_flat_stylebox(Color(mv, mv, mv, 0.9), gn_margin_side, 24, gn_margin_side, 5);
+	Ref<StyleBoxFlat> smgraphsbselected = make_flat_stylebox(Color(mv, mv, mv, 0.9), gn_margin_side, 24, gn_margin_side, 5, p_scale);
 	smgraphsbselected->set_border_width_all(border_width);
 	smgraphsbselected->set_border_color(Color(accent_color.r, accent_color.g, accent_color.b, 0.9));
-	smgraphsbselected->set_shadow_size(8 * EDSCALE);
+	smgraphsbselected->set_shadow_size(8 * EDSCALE * p_scale);
 	smgraphsbselected->set_shadow_color(shadow_color);
 
 	if (use_gn_headers) {
-		graphsb->set_border_width(MARGIN_TOP, 24 * EDSCALE);
-		graphsbselected->set_border_width(MARGIN_TOP, 24 * EDSCALE);
-		graphsbcomment->set_border_width(MARGIN_TOP, 24 * EDSCALE);
-		graphsbcommentselected->set_border_width(MARGIN_TOP, 24 * EDSCALE);
+		graphsb->set_border_width(MARGIN_TOP, 24 * EDSCALE * p_scale);
+		graphsbselected->set_border_width(MARGIN_TOP, 24 * EDSCALE * p_scale);
+		graphsbcomment->set_border_width(MARGIN_TOP, 24 * EDSCALE * p_scale);
+		graphsbcommentselected->set_border_width(MARGIN_TOP, 24 * EDSCALE * p_scale);
 	}
 
 	theme->set_stylebox("frame", "GraphNode", graphsb);
@@ -1042,19 +1042,19 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	default_node_color.a = 0.7;
 	theme->set_color("close_color", "GraphNode", default_node_color);
 
-	theme->set_constant("port_offset", "GraphNode", 14 * EDSCALE);
-	theme->set_constant("title_h_offset", "GraphNode", -16 * EDSCALE);
-	theme->set_constant("title_offset", "GraphNode", 20 * EDSCALE);
-	theme->set_constant("close_h_offset", "GraphNode", 20 * EDSCALE);
-	theme->set_constant("close_offset", "GraphNode", 20 * EDSCALE);
-	theme->set_constant("separation", "GraphNode", 1 * EDSCALE);
+	theme->set_constant("port_offset", "GraphNode", 14 * EDSCALE * p_scale);
+	theme->set_constant("title_h_offset", "GraphNode", -16 * EDSCALE * p_scale);
+	theme->set_constant("title_offset", "GraphNode", 20 * EDSCALE * p_scale);
+	theme->set_constant("close_h_offset", "GraphNode", 20 * EDSCALE * p_scale);
+	theme->set_constant("close_offset", "GraphNode", 20 * EDSCALE * p_scale);
+	theme->set_constant("separation", "GraphNode", 1 * EDSCALE * p_scale);
 
 	theme->set_icon("close", "GraphNode", theme->get_icon("GuiCloseCustomizable", "EditorIcons"));
 	theme->set_icon("resizer", "GraphNode", theme->get_icon("GuiResizer", "EditorIcons"));
 	theme->set_icon("port", "GraphNode", theme->get_icon("GuiGraphNodePort", "EditorIcons"));
 
 	// GridContainer
-	theme->set_constant("vseperation", "GridContainer", (extra_spacing + default_margin_size) * EDSCALE);
+	theme->set_constant("vseperation", "GridContainer", (extra_spacing + default_margin_size) * EDSCALE * p_scale);
 
 	// FileDialog
 	theme->set_icon("folder", "FileDialog", theme->get_icon("Folder", "EditorIcons"));
@@ -1062,10 +1062,10 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 
 	// color picker
 	theme->set_constant("margin", "ColorPicker", popup_margin_size);
-	theme->set_constant("sv_width", "ColorPicker", 256 * EDSCALE);
-	theme->set_constant("sv_height", "ColorPicker", 256 * EDSCALE);
-	theme->set_constant("h_width", "ColorPicker", 30 * EDSCALE);
-	theme->set_constant("label_width", "ColorPicker", 10 * EDSCALE);
+	theme->set_constant("sv_width", "ColorPicker", 256 * EDSCALE * p_scale);
+	theme->set_constant("sv_height", "ColorPicker", 256 * EDSCALE * p_scale);
+	theme->set_constant("h_width", "ColorPicker", 30 * EDSCALE * p_scale);
+	theme->set_constant("label_width", "ColorPicker", 10 * EDSCALE * p_scale);
 	theme->set_icon("screen_picker", "ColorPicker", theme->get_icon("ColorPick", "EditorIcons"));
 	theme->set_icon("add_preset", "ColorPicker", theme->get_icon("Add", "EditorIcons"));
 	theme->set_icon("preset_bg", "ColorPicker", theme->get_icon("GuiMiniCheckerboard", "EditorIcons"));

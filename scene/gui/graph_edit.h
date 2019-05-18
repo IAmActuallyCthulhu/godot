@@ -38,6 +38,7 @@
 #include "scene/gui/spin_box.h"
 #include "scene/gui/texture_rect.h"
 #include "scene/gui/tool_button.h"
+#include "editor/editor_themes.h"
 
 class GraphEdit;
 
@@ -70,6 +71,8 @@ private:
 	ToolButton *zoom_minus;
 	ToolButton *zoom_reset;
 	ToolButton *zoom_plus;
+	Map<float, Ref<Theme> > zoom_level;
+	Ref<Theme> theme;
 
 	ToolButton *snap_button;
 	SpinBox *snap_amount;
@@ -182,6 +185,18 @@ protected:
 	virtual bool clips_input() const;
 
 public:
+	void add_zoom_level(const float p_zoom_level) {
+		zoom_level.insert(p_zoom_level, create_editor_theme(get_theme(), p_zoom_level));
+	}
+ 	void remove_zoom_level(const float p_zoom_level) {
+		zoom_level.erase(p_zoom_level);
+	}
+	Ref<Theme> get_zoom_level(const float p_zoom_level) {
+		if (!zoom_level.has(p_zoom_level)) {
+			return Ref<Theme>();
+		}
+		return zoom_level[p_zoom_level];
+	}
 	Error connect_node(const StringName &p_from, int p_from_port, const StringName &p_to, int p_to_port);
 	bool is_node_connected(const StringName &p_from, int p_from_port, const StringName &p_to, int p_to_port);
 	void disconnect_node(const StringName &p_from, int p_from_port, const StringName &p_to, int p_to_port);

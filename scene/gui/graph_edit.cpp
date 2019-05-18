@@ -1001,24 +1001,24 @@ void GraphEdit::_gui_input(const Ref<InputEvent> &p_ev) {
 
 		if (b->get_button_index() == BUTTON_WHEEL_UP && b->is_pressed()) {
 			//too difficult to get right
-			//set_zoom(zoom*ZOOM_SCALE);
+			set_zoom(zoom * ZOOM_SCALE);
 		}
 
 		if (b->get_button_index() == BUTTON_WHEEL_DOWN && b->is_pressed()) {
 			//too difficult to get right
-			//set_zoom(zoom/ZOOM_SCALE);
+			set_zoom(zoom / ZOOM_SCALE);
 		}
 		if (b->get_button_index() == BUTTON_WHEEL_UP && !Input::get_singleton()->is_key_pressed(KEY_SHIFT)) {
-			v_scroll->set_value(v_scroll->get_value() - v_scroll->get_page() * b->get_factor() / 8);
+			//v_scroll->set_value(v_scroll->get_value() - v_scroll->get_page() * b->get_factor() / 8);
 		}
 		if (b->get_button_index() == BUTTON_WHEEL_DOWN && !Input::get_singleton()->is_key_pressed(KEY_SHIFT)) {
-			v_scroll->set_value(v_scroll->get_value() + v_scroll->get_page() * b->get_factor() / 8);
+			//v_scroll->set_value(v_scroll->get_value() + v_scroll->get_page() * b->get_factor() / 8);
 		}
 		if (b->get_button_index() == BUTTON_WHEEL_RIGHT || (b->get_button_index() == BUTTON_WHEEL_DOWN && Input::get_singleton()->is_key_pressed(KEY_SHIFT))) {
-			h_scroll->set_value(h_scroll->get_value() + h_scroll->get_page() * b->get_factor() / 8);
+			//h_scroll->set_value(h_scroll->get_value() + h_scroll->get_page() * b->get_factor() / 8);
 		}
 		if (b->get_button_index() == BUTTON_WHEEL_LEFT || (b->get_button_index() == BUTTON_WHEEL_UP && Input::get_singleton()->is_key_pressed(KEY_SHIFT))) {
-			h_scroll->set_value(h_scroll->get_value() - h_scroll->get_page() * b->get_factor() / 8);
+			//h_scroll->set_value(h_scroll->get_value() - h_scroll->get_page() * b->get_factor() / 8);
 		}
 	}
 
@@ -1085,20 +1085,15 @@ void GraphEdit::set_zoom_custom(float p_zoom, const Vector2 &p_center) {
 	zoom_minus->set_disabled(zoom == MIN_ZOOM);
 	zoom_plus->set_disabled(zoom == MAX_ZOOM);
 
-	Vector2 sbofs = (Vector2(h_scroll->get_value(), v_scroll->get_value()) + p_center) / zoom;
-
 	zoom = p_zoom;
-	top_layer->update();
-
-	_update_scroll();
-	connections_layer->update();
-
-	if (is_visible_in_tree()) {
-
-		Vector2 ofs = sbofs * zoom - p_center;
-		h_scroll->set_value(ofs.x);
-		v_scroll->set_value(ofs.y);
+	theme = get_zoom_level(p_zoom);
+	if(theme.is_null()) {
+		add_zoom_level(p_zoom);
+		theme = get_zoom_level(p_zoom);
 	}
+	set_theme(theme);
+	top_layer->set_theme(theme);
+	connections_layer->set_theme(theme);
 
 	update();
 }
@@ -1154,8 +1149,8 @@ Array GraphEdit::_get_connection_list() const {
 }
 
 void GraphEdit::_zoom_minus() {
-
-	set_zoom(zoom / ZOOM_SCALE);
+	
+	set_zoom(zoom * ZOOM_SCALE);
 }
 void GraphEdit::_zoom_reset() {
 
@@ -1163,8 +1158,8 @@ void GraphEdit::_zoom_reset() {
 }
 
 void GraphEdit::_zoom_plus() {
-
-	set_zoom(zoom * ZOOM_SCALE);
+	
+	set_zoom(zoom / ZOOM_SCALE);
 }
 
 void GraphEdit::add_valid_connection_type(int p_type, int p_with_type) {
@@ -1385,4 +1380,5 @@ GraphEdit::GraphEdit() {
 	setting_scroll_ofs = false;
 	just_disconnected = false;
 	set_clip_contents(true);
+	theme = get_theme();
 }
