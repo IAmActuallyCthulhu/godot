@@ -39,6 +39,7 @@
 #include "scene/gui/texture_rect.h"
 #include "scene/gui/tool_button.h"
 #include "editor/editor_themes.h"
+#include "core/os/os.h"
 
 class GraphEdit;
 
@@ -195,6 +196,8 @@ public:
 		if (!zoom_level.has(p_zoom_level)) {
 			return Ref<Theme>();
 		}
+		// log p_zoom_level
+		OS::get_singleton()->print("%f \n", p_zoom_level);
 		return zoom_level[p_zoom_level];
 	}
 	Error connect_node(const StringName &p_from, int p_from_port, const StringName &p_to, int p_to_port);
