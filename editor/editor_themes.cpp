@@ -410,10 +410,10 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme, const float p_scale) {
 	const float extra_spacing = EDITOR_GET("interface/theme/additional_spacing");
 
 	Ref<StyleBoxFlat> style_widget = style_default->duplicate();
-	style_widget->set_default_margin(MARGIN_LEFT, (extra_spacing + 6) * EDSCALE * p_scale);
-	style_widget->set_default_margin(MARGIN_TOP, (extra_spacing + default_margin_size) * EDSCALE * p_scale);
-	style_widget->set_default_margin(MARGIN_RIGHT, (extra_spacing + 6) * EDSCALE * p_scale);
-	style_widget->set_default_margin(MARGIN_BOTTOM, (extra_spacing + default_margin_size) * EDSCALE * p_scale);
+	style_widget->set_default_margin(MARGIN_LEFT, (extra_spacing + 6) * EDSCALE);
+	style_widget->set_default_margin(MARGIN_TOP, (extra_spacing + default_margin_size) * EDSCALE);
+	style_widget->set_default_margin(MARGIN_RIGHT, (extra_spacing + 6) * EDSCALE);
+	style_widget->set_default_margin(MARGIN_BOTTOM, (extra_spacing + default_margin_size) * EDSCALE);
 	style_widget->set_bg_color(dark_color_1);
 	style_widget->set_border_color(dark_color_2);
 

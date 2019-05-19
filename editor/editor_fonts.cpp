@@ -56,8 +56,8 @@
 	} else {                                                    \
 		m_name->set_font_data(DefaultFont);                     \
 	}                                                           \
-	m_name->set_spacing(DynamicFont::SPACING_TOP, -EDSCALE * p_scale);    \
-	m_name->set_spacing(DynamicFont::SPACING_BOTTOM, -EDSCALE * p_scale); \
+	m_name->set_spacing(DynamicFont::SPACING_TOP, -EDSCALE);    \
+	m_name->set_spacing(DynamicFont::SPACING_BOTTOM, -EDSCALE); \
 	MAKE_FALLBACKS(m_name);
 
 #define MAKE_BOLD_FONT(m_name, m_size)                          \
@@ -70,8 +70,8 @@
 	} else {                                                    \
 		m_name->set_font_data(DefaultFontBold);                 \
 	}                                                           \
-	m_name->set_spacing(DynamicFont::SPACING_TOP, -EDSCALE * p_scale);    \
-	m_name->set_spacing(DynamicFont::SPACING_BOTTOM, -EDSCALE * p_scale); \
+	m_name->set_spacing(DynamicFont::SPACING_TOP, -EDSCALE);    \
+	m_name->set_spacing(DynamicFont::SPACING_BOTTOM, -EDSCALE); \
 	MAKE_FALLBACKS(m_name);
 
 #define MAKE_SOURCE_FONT(m_name, m_size)                        \
@@ -84,8 +84,8 @@
 	} else {                                                    \
 		m_name->set_font_data(dfmono);                          \
 	}                                                           \
-	m_name->set_spacing(DynamicFont::SPACING_TOP, -EDSCALE * p_scale);    \
-	m_name->set_spacing(DynamicFont::SPACING_BOTTOM, -EDSCALE * p_scale); \
+	m_name->set_spacing(DynamicFont::SPACING_TOP, -EDSCALE);    \
+	m_name->set_spacing(DynamicFont::SPACING_BOTTOM, -EDSCALE); \
 	MAKE_FALLBACKS(m_name);
 
 void editor_register_fonts(Ref<Theme> p_theme, float p_scale) {
